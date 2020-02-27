@@ -120,3 +120,17 @@ pub fn try_get_song_from_file(audio_data: File, song_path: PathBuf) -> Option<So
         lyrics_buffer,
     ))
 }
+
+struct ScanState {
+    ignore_spaces: bool,
+    escaped: bool,
+}
+
+impl Default for ScanState {
+    fn default() -> Self {
+        ScanState {
+            ignore_spaces: false,
+            escaped: false,
+        }
+    }
+}
