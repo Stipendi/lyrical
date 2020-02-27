@@ -1,6 +1,7 @@
 use std::fs;
 use std::fs::File;
 use std::path::PathBuf;
+use std::time::Duration;
 
 pub struct Breakpoint {
     pub character: char,
@@ -34,6 +35,11 @@ impl Song {
             lyrics,
         }
     }
+}
+
+pub enum Operation {
+    Print(char),
+    Pause(Duration),
 }
 
 pub fn try_get_song_from_file(audio_data: File, song_path: PathBuf) -> Option<Song> {
