@@ -3,6 +3,14 @@ use std::fs::File;
 use std::path::PathBuf;
 use std::time::Duration;
 
+pub const BREAKPOINTS: [Breakpoint; 5] = [
+    Breakpoint::new('#', 4, 1),
+    Breakpoint::new('$', 4, 2),
+    Breakpoint::new('%', 4, 4),
+    Breakpoint::new('&', 4, 8),
+    Breakpoint::new('?', 4, 16),
+];
+
 pub struct Breakpoint {
     pub character: char,
     pub signature: u32,
