@@ -46,6 +46,45 @@ impl Song {
             scan_state: ScanState::default(),
         }
     }
+
+    // TODO: Figure out how to add a hyperlink
+    /// A method that returns a Vec of things to do.
+    pub fn parse_lyrics(&mut self) -> Vec<Operation> {
+        let mut operations: Vec<Operation> = Vec::with_capacity(self.lyrics.len());
+        // Iterate over every character in the lyrics
+        for char in self.lyrics.chars() {
+            if self.scan_state.escaped {
+                self.scan_state.escaped = false;
+                operations.push(Operation::Print(char));
+                continue;
+            } else if char == '\\' {
+                self.scan_state.escaped = true;
+                continue;
+            }
+
+            let search_for_break = BREAKPOINTS.iter().find(|value| value.character == char);
+            match search_for_break {
+                Some(breakpoint) => {
+                    self.scan_state.ignore_spaces = true;
+                    let pause_in_secs = 60.0 * breakpoint.length as f64
+                        / breakpoint.signature as f64
+                        / self.bpm as f64;
+                    let duration = Duration::from_secs_f64(pause_in_secs);
+                    operations.push(Operation::Pause(duration));
+                }
+                None => {
+                    if self.scan_state.ignore_spaces && char == ' ' {
+                        continue;
+                    } else {
+                        self.scan_state.ignore_spaces = false;
+                        operations.push(Operation::Print(char));
+                    }
+                }
+            };
+        }
+
+        operations
+    }
 }
 
 pub enum Operation {
