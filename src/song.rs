@@ -32,6 +32,8 @@ pub struct Song {
     pub bpm: u32,
     pub name: String,
     pub lyrics: String,
+
+    scan_state: ScanState,
 }
 
 impl Song {
@@ -41,6 +43,7 @@ impl Song {
             name,
             bpm,
             lyrics,
+            scan_state: ScanState::default(),
         }
     }
 }
